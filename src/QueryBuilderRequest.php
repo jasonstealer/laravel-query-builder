@@ -38,8 +38,8 @@ class QueryBuilderRequest extends Request
 
         $includeParts = $this->getRequestData($includeParameterName);
 
-        if (! is_array($includeParts)) {
-            $includeParts = explode(static::getIncludesArrayValueDelimiter(), $this->getRequestData($includeParameterName));
+        if (is_string($includeParts)) {
+            $includeParts = explode(static::getIncludesArrayValueDelimiter(), $includeParts);
         }
 
         return collect($includeParts)->filter();
@@ -51,7 +51,7 @@ class QueryBuilderRequest extends Request
 
         $appendParts = $this->getRequestData($appendParameterName);
 
-        if (! is_array($appendParts)) {
+        if (! is_array($appendParts) && ! is_null($appendParts)) {
             $appendParts = explode(static::getAppendsArrayValueDelimiter(), $appendParts);
         }
 
@@ -106,10 +106,14 @@ class QueryBuilderRequest extends Request
     /**
      * @param $value
      *
-     * @return array|bool
+     * @return array|bool|null
      */
     protected function getFilterValue($value)
     {
+        if (empty($value)) {
+            return $value;
+        }
+
         if (is_array($value)) {
             return collect($value)->map(function ($valueValue) {
                 return $this->getFilterValue($valueValue);
@@ -137,7 +141,7 @@ class QueryBuilderRequest extends Request
             return $this->input($key, $default);
         }
 
-        return $this->query($key, $default);
+        return $this->get($key, $default);
     }
 
     public static function setIncludesArrayValueDelimiter(string $includesArrayValueDelimiter): void
@@ -188,5 +192,14 @@ class QueryBuilderRequest extends Request
     public static function getFilterArrayValueDelimiter(): string
     {
         return static::$filterArrayValueDelimiter;
+    }
+
+    public static function resetDelimiters(): void
+    {
+        self::$includesArrayValueDelimiter = ',';
+        self::$appendsArrayValueDelimiter = ',';
+        self::$fieldsArrayValueDelimiter = ',';
+        self::$sortsArrayValueDelimiter = ',';
+        self::$filterArrayValueDelimiter = ',';
     }
 }

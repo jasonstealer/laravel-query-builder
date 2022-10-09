@@ -120,13 +120,13 @@ $posts = QueryBuilder::for(Post::class)
 
 ## Selecting included fields
 
-You can select only some fields to be included using the [`allowedFields` method on the query builder](https://docs.spatie.be/laravel-query-builder/v2/features/selecting-fields/).
+You can select only some fields to be included using the [`allowedFields` method on the query builder](https://spatie.be/docs/laravel-query-builder/v5/features/selecting-fields/).
 
 ⚠️ `allowedFields` must be called before `allowedIncludes`. Otherwise the query builder wont know what fields to include for the requested includes and an exception will be thrown.
 
 ## Include casing
 
-Relation/include names will be converted to camelCase when looking for the corresponding relationship on the model. This means `/users?include=blog-posts` and `/users?include=blogPosts` will both try to load the `blogPosts()` relationship.
+Relation/include names will be passed from request URL to the query directly. This means `/users?include=blog-posts` will try to load `blog-posts` relationship and  `/users?include=blogPosts` will try to load the `blogPosts()` relationship.
 
 ## Eloquent API resources
 
