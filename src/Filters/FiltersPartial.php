@@ -18,7 +18,7 @@ class FiltersPartial extends FiltersExact implements Filter
 
         $wrappedProperty = $query->getQuery()->getGrammar()->wrap($query->qualifyColumn($property));
 
-        $sql = "LOWER({$wrappedProperty}) LIKE ?";
+        $sql = "LOWER({$wrappedProperty}::varchar) LIKE ?";
 
         if (is_array($value)) {
             if (count(array_filter($value, 'strlen')) === 0) {
